@@ -1,4 +1,5 @@
 import React, { Fragment, useEffect, useState, useRef } from "react";
+import ResizeObserver from "resize-observer-polyfill";
 import "./Marquee.scss";
 
 interface MarqueeProps {
@@ -145,6 +146,21 @@ const Marquee: React.FC<MarqueeProps> = ({
   useEffect(() => {
     setIsMounted(true);
   }, []);
+
+  // Fix: recalculate if marquee and container is changed
+  useEffect(() => {
+    if (marqueeRef.current && containerRef.current) {
+      console.log("use ResizeObserver");
+
+      new ResizeObserver(() => {
+        calculateWidth();
+      }).observe(marqueeRef.current);
+
+      new ResizeObserver(() => {
+        calculateWidth();
+      }).observe(containerRef.current);
+    }
+  }, [isMounted]);
 
   // Gradient color in an unfinished rgba format
   const rgbaGradientColor = `rgba(${gradientColor[0]}, ${gradientColor[1]}, ${gradientColor[2]}`;
