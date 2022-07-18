@@ -118,9 +118,9 @@ const Marquee: React.FC<MarqueeProps> = ({
   const [duration, setDuration] = useState(0);
   const [isMounted, setIsMounted] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
-  const containerResizeObserver = useRef(null);
+  const containerResizeObserver = useRef<ResizeObserver>()
   const marqueeRef = useRef<HTMLDivElement>(null);
-  const marqueeResizeObserver = useRef(null);
+  const marqueeResizeObserver = useRef<ResizeObserver>()
 
   const calculateWidth = () => {
     // Find width of container and width of marquee
