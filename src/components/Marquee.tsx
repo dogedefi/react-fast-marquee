@@ -118,7 +118,9 @@ const Marquee: React.FC<MarqueeProps> = ({
   const [duration, setDuration] = useState(0);
   const [isMounted, setIsMounted] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const containerResizeObserver = useRef(null);
   const marqueeRef = useRef<HTMLDivElement>(null);
+  const marqueeResizeObserver = useRef(null);
 
   const calculateWidth = () => {
     // Find width of container and width of marquee
@@ -149,16 +151,16 @@ const Marquee: React.FC<MarqueeProps> = ({
 
   // Fix: recalculate if marquee and container is changed
   useEffect(() => {
-    if (marqueeRef.current && containerRef.current) {
-      console.log("use ResizeObserver");
-
-      new ResizeObserver(() => {
-        calculateWidth();
-      }).observe(marqueeRef.current);
-
-      new ResizeObserver(() => {
-        calculateWidth();
-      }).observe(containerRef.current);
+    if (marqueeRef.current && containerRef.current && isMounted) {
+      console.log('use ResizeObserver');
+      if (!containerResizeObserver.current) {
+        containerResizeObserver.current = new ResizeObserver(() => calculateWidth());
+        containerResizeObserver.current.observe(containerRef.current)
+      }
+      if (!marqueeResizeObserver.current) {
+        marqueeResizeObserver.current = new ResizeObserver(() => calculateWidth());
+        marqueeResizeObserver.current.observe(marqueeRef.current);
+      }
     }
   }, [isMounted]);
 
